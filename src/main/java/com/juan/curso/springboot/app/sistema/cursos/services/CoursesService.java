@@ -11,5 +11,5 @@ public interface CoursesService {
 	Courses save(Courses course);
 	Optional<Courses> update(Long id, Courses course);
 	Optional<Courses> delete(Long id);
-	Optional<Courses> addClass(Long idClass, Long idCourse);
+	Optional<Courses> addClass(Long idCourse, Long idClass);
 }

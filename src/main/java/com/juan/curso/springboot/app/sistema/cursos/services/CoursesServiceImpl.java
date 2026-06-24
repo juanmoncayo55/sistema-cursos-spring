@@ -64,7 +64,7 @@ public class CoursesServiceImpl implements CoursesService{
 
 	@Override
 	@Transactional
-	public Optional<Courses> addClass(Long idClass, Long idCourse) {
+	public Optional<Courses> addClass(Long idCourse, Long idClass) {
 		
 		Optional<Classes> classExist = repositoryClass.findById(idClass);
 		Optional<Courses> courseExist = repository.findById(idCourse);

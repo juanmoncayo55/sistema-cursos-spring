@@ -70,6 +70,19 @@ public class CourseController {
 		return ResponseEntity.noContent().build();		
 	}
 	
+	//Optional<Courses> addClass(Long idClass, Long idCourse);
+	@PutMapping("/{idCourse}/class/{idClass}")
+	public ResponseEntity<?> addClass(@PathVariable Long idCourse, @PathVariable Long idClass){
+		
+		Optional<Courses> courseOptional = courseService.addClass(idCourse, idClass);
+		
+		if(!courseOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();	
+		}
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(courseOptional.get());
+	}
+	
 	
 }
 

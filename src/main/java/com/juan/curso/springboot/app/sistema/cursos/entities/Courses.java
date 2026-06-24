@@ -41,7 +41,6 @@ public class Courses {
 	private Teacher teacher;
 	
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
 	private Set<Classes> classes;
 
 	public Courses() {

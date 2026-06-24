@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,10 +33,12 @@ public class Classes {
 	private String status;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "course_id")
 	private Courses course;
 	
 	@OneToMany(mappedBy = "classe", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private Set<Comments> comments;
 	
 	public Classes() {
@@ -101,6 +105,10 @@ public class Classes {
 		this.comments.add(comment);
 		comment.setClasse(this);
 	}
+	
+	public Long getIdCourse() {
+		return this.course.getId();
+	}
 
 	@Override
 	public int hashCode() {
@@ -124,7 +132,4 @@ public class Classes {
 		return "Classes {id=" + id + ", name=" + name + ", mode=" + mode + ", maxCapacity=" + maxCapacity + ", status="
 				+ status + "}";
 	}
-	
-	
-	
 }

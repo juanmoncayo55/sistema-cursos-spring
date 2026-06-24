@@ -3,6 +3,8 @@ package com.juan.curso.springboot.app.sistema.cursos.entities;
 import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,10 +25,12 @@ public class Comments {
 	
 	@ManyToOne
 	@JoinColumn(name="student_id", nullable = false)
+	@JsonIgnore
 	private Student student;
 	
 	@ManyToOne
 	@JoinColumn(name="class_id", nullable = false)
+	@JsonIgnore
 	private Classes classe;
 	
 	public Comments() { }
@@ -64,6 +68,14 @@ public class Comments {
 
 	public void setClasse(Classes classe) {
 		this.classe = classe;
+	}
+	
+	public Long getIdStudent() {
+		return this.getStudent().getId();
+	}
+	
+	public Long getIdClass() {
+		return this.getClasse().getId();
 	}
 
 	@Override
