@@ -18,6 +18,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "courses")
@@ -26,9 +28,13 @@ public class Courses {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message = "{NotBlank.courses.name}")
 	private String name;
+	
+	@NotBlank(message = "{NotBlank.courses.category}")
 	private String category;
 	
+	@NotNull(message = "{NotNull.courses.timeHour}")
 	@Column(name = "time_hour")
 	private Date timeHour;
 	

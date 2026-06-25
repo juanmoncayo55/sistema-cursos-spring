@@ -68,12 +68,11 @@ public class CommentsServiceImpl implements CommentsService{
 
 	@Override
 	@Transactional
-	public Optional<Comments> update(Long id, Comments comment) {
+	public Optional<Comments> update(Long id, CommentCreateDTO comment) {
 		Optional<Comments> commentOptional = repository.findById(id);
 		if(commentOptional.isPresent()){
 			Comments commentDB = commentOptional.get();
 			commentDB.setComment(comment.getComment());
-			commentDB.setDate(new Date());
 			Optional.of(repository.save(commentDB));
 		}
 		return commentOptional;

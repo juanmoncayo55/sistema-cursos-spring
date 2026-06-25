@@ -1,11 +1,14 @@
 package com.juan.curso.springboot.app.sistema.cursos.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.juan.curso.springboot.app.sistema.cursos.entities.Classes;
 import com.juan.curso.springboot.app.sistema.cursos.services.ClassesService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/class")
@@ -40,13 +45,24 @@ public class ClassController {
 	}
 	
 	@PostMapping
-	public Classes save(@RequestBody Classes classe){
-		return classService.save(classe);
+	public ResponseEntity<?> save(@Valid @RequestBody Classes classe, BindingResult result){
+		if(result.hasFieldErrors()) {
+			return validate(result);
+		}
+		try {
+			Classes newClass = classService.save(classe);
+			return ResponseEntity.status(HttpStatus.CREATED).body(newClass);
+		}catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+		
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Classes classe){
-		
+	public ResponseEntity<?> update(@Valid @RequestBody Classes classe, BindingResult result, @PathVariable Long id){
+		if(result.hasFieldErrors()) {
+			return validate(result);
+		}
 		Optional<Classes> optionalClass = classService.update(id, classe);
 		
 		if(!optionalClass.isPresent()) {
@@ -66,5 +82,15 @@ public class ClassController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(classOptional.get());
+	}
+	
+	private ResponseEntity<?> validate(BindingResult result) {
+		Map<String, String> errors = new HashMap<>();
+		
+		result.getFieldErrors().forEach(error -> {
+			errors.put(error.getField(), error.getDefaultMessage());
+		});
+		
+		return ResponseEntity.badRequest().body(errors);
 	}
 }

@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "comments")
@@ -20,17 +22,22 @@ public class Comments {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message="{NotBlank.comments.comment}")
 	private String comment;
+	
+	@NotNull(message="{NotNull.comments.date}")
 	private Date date;
 	
 	@ManyToOne
 	@JoinColumn(name="student_id", nullable = false)
 	@JsonIgnore
+	@NotNull(message="{NotNull.comments.student_id}")
 	private Student student;
 	
 	@ManyToOne
 	@JoinColumn(name="class_id", nullable = false)
 	@JsonIgnore
+	@NotNull(message="{NotNull.comments.class_id}")
 	private Classes classe;
 	
 	public Comments() { }

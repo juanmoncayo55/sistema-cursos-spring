@@ -1,11 +1,14 @@
 package com.juan.curso.springboot.app.sistema.cursos.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.juan.curso.springboot.app.sistema.cursos.dto.CommentCreateDTO;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Comments;
 import com.juan.curso.springboot.app.sistema.cursos.services.CommentsService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -42,7 +47,10 @@ public class CommentController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody CommentCreateDTO comment) {
+	public ResponseEntity<?> save(@Valid @RequestBody CommentCreateDTO comment, BindingResult result) {
+		if(result.hasFieldErrors()) {
+			return validate(result);
+		}
 		try {
 			Comments commentNew = commentsService.save(comment);
 			return ResponseEntity.status(HttpStatus.CREATED).body(commentNew);
@@ -53,7 +61,10 @@ public class CommentController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Comments comment){
+	public ResponseEntity<?> update(@Valid @RequestBody CommentCreateDTO comment, BindingResult result, @PathVariable Long id){
+		if(result.hasFieldErrors()) {
+			return validate(result);
+		}
 		Optional<Comments> optionalComment = commentsService.update(id, comment);
 		if(!optionalComment.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -70,7 +81,15 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.OK).body(commentOptional.get());
 	}
 	
-	
+	private ResponseEntity<?> validate(BindingResult result) {
+		Map<String, String> errors = new HashMap<>();
+		
+		result.getFieldErrors().forEach(error -> {
+			errors.put(error.getField(), error.getDefaultMessage());
+		});
+		
+		return ResponseEntity.badRequest().body(errors);
+	}
 }
 
 

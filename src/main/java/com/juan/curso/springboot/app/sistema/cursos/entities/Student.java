@@ -18,6 +18,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "students")
@@ -26,9 +29,18 @@ public class Student {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message = "{NotBlank.student.name}")
 	private String name;
+	
+	@NotBlank(message = "{NotBlank.student.lastname}")
 	private String lastname;
+	
+	@Email(message = "{Email.student.email}")
+	@NotBlank(message = "{NotBlank.student.email}")
 	private String email;
+	
+	@NotBlank(message = "{NotBlank.student.dni}")
+	@Size(message = "{Size.student.dni}", min = 5, max = 12)
 	private String dni;
 	
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

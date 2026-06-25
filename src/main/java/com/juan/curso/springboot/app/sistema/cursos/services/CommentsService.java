@@ -10,6 +10,6 @@ public interface CommentsService {
 	List<Comments> findAll();
 	Optional<Comments> findById(Long id);
 	Comments save(CommentCreateDTO comment);
-	Optional<Comments> update(Long id, Comments comment);
+	Optional<Comments> update(Long id, CommentCreateDTO comment);
 	Optional<Comments> delete(Long id);
 }

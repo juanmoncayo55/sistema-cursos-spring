@@ -16,6 +16,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "classes")
@@ -24,12 +26,18 @@ public class Classes {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank(message = "{NotBlank.classes.name}")
 	private String name;
+	
+	@NotBlank(message = "{NotBlank.classes.mode}")
 	private String mode;
 	
 	@Column(name = "max_capacity")
+	@NotBlank(message = "{NotNull.classes.maxCapacity}")
+	@Size(max=40, min=10, message="{Size.classes.maxCapacity}")
 	private Integer maxCapacity;
 	
+	@NotBlank(message="{NotBlank.classes.status}")
 	private String status;
 	
 	@ManyToOne
