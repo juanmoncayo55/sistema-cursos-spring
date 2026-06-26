@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.juan.curso.springboot.app.sistema.cursos.entities.CardId;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Courses;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Student;
+import com.juan.curso.springboot.app.sistema.cursos.exceptions.CourseNotFoundExceptions;
+import com.juan.curso.springboot.app.sistema.cursos.exceptions.StudentNotFoundExceptions;
 import com.juan.curso.springboot.app.sistema.cursos.repositories.CoursesRepository;
 import com.juan.curso.springboot.app.sistema.cursos.repositories.StudentRepository;
 
@@ -74,21 +76,14 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional
 	public Optional<Student> assignCourse(Long idCourse, Long idStudent) {
-		Optional<Student> studentExist = repository.findById(idStudent);
-		Optional<Courses> courseExist = repositoryCourse.findById(idCourse);
+		Student studentExist = repository.findById(idStudent).orElseThrow(() -> new StudentNotFoundExceptions("El estudiante con id: "+ idStudent +", no existe"));
 		
-		if(!studentExist.isPresent()) {
-			throw new RuntimeException("El estudiante con id: "+ idStudent +", no existe");
-		}
-		if(!courseExist.isPresent()) {
-			throw new RuntimeException("El curso con id: "+ idCourse +", no existe");
-		}
+		Courses courseExist = repositoryCourse.findById(idCourse).orElseThrow(() -> new CourseNotFoundExceptions("El curso con id: "+ idCourse +", no existe"));
 		
-		Student studentNew = studentExist.get();
-		//studentNew.getCourses().add(courseExist.get());
-		studentNew.addCourse(courseExist.get());
+
+		studentExist.addCourse(courseExist);
 		
-		return Optional.of(repository.save(studentNew));
+		return Optional.of(repository.save(studentExist));
 		
 	}
 
