@@ -20,6 +20,10 @@ import com.juan.curso.springboot.app.sistema.cursos.exceptions.TeacherNotFoundEx
 
 @RestControllerAdvice
 public class HandlerExceptionController {
+	//IllegalArgumentException
+	//HttpMessageNotReadableException
+	//IllegalStateException
+	//HttpRequestMethodNotSupportedException
 	@ExceptionHandler(NullPointerException.class)
 	public Map<String, Object> nullPointerExceptionError(Exception ex){
 		Map<String, Object> error = new HashMap<>();

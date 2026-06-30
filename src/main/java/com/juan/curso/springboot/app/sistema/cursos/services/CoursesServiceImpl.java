@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,21 +24,25 @@ public class CoursesServiceImpl implements CoursesService{
 	private ClassesRepository repositoryClass;
 
 	@Override
-	public List<Courses> findAll() {
-		return (List<Courses>) repository.findAll();
+	@Transactional(readOnly = true)
+	public Page<Courses> findAll(Pageable pageable) {
+		return (Page<Courses>) repository.findAll(pageable);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Courses> findById(Long id) {
 		return repository.findById(id);
 	}
 
 	@Override
+	@Transactional
 	public Courses save(Courses course) {
 		return repository.save(course);
 	}
 
 	@Override
+	@Transactional
 	public Optional<Courses> update(Long id, Courses course) {
 		Optional<Courses> courseOptional = repository.findById(id);
 		
@@ -54,6 +60,7 @@ public class CoursesServiceImpl implements CoursesService{
 	}
 
 	@Override
+	@Transactional
 	public Optional<Courses> delete(Long id) {
 		Optional<Courses> courseOptional = repository.findById(id);
 		courseOptional.ifPresent(course -> {
@@ -83,6 +90,12 @@ public class CoursesServiceImpl implements CoursesService{
 		Courses saveC = repository.save(courseDB);
 		
 		return Optional.of(saveC);
+	}
+
+	@Override
+	@Transactional
+	public List<Courses> saveAll(List<Courses> courses) {
+		return (List<Courses>) repository.saveAll(courses);
 	}
 
 }

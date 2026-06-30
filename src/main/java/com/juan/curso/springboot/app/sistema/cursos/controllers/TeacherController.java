@@ -1,11 +1,14 @@
 package com.juan.curso.springboot.app.sistema.cursos.controllers;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,8 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.juan.curso.springboot.app.sistema.cursos.dto.PageStudentResponse;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Teacher;
 import com.juan.curso.springboot.app.sistema.cursos.services.TeacherService;
 
@@ -30,8 +35,15 @@ public class TeacherController {
 	private TeacherService teacherService;
 	
 	@GetMapping
-	public List<Teacher> getAll(){
-		return teacherService.findAll();
+	public ResponseEntity<PageStudentResponse> getAll(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size
+	){
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+		Page<Teacher> pageTacher = teacherService.findAll(pageable);
+		PageStudentResponse pageResponse = new PageStudentResponse(pageTacher);
+		
+		return ResponseEntity.ok(pageResponse);
 	}
 	
 	@GetMapping("/{id}")

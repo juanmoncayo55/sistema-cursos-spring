@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +29,8 @@ public class StudentServiceImpl implements StudentService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Student> findAll() {
-		return (List<Student>) repository.findAll();
+	public Page<Student> findAll(Pageable pageable) {
+		return (Page<Student>) repository.findAll(pageable);
 	}
 
 	@Override
@@ -46,6 +48,24 @@ public class StudentServiceImpl implements StudentService{
 		cardId.setStudent(student);
 		
 		return repository.save(student);
+	}
+	
+	@Override
+	@Transactional
+	public List<Student> saveAll(List<Student> students) {
+		
+		//student.setCardId(cardId);
+		//cardId.setStudent(student);
+		
+		for(Student student : students) {
+			CardId cardId = new CardId();
+			cardId.setDateIssue(new Date());
+			
+			student.setCardId(cardId);
+			cardId.setStudent(student);
+		}
+		
+		return repository.saveAll(students);
 	}
 
 	@Override
