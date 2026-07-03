@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.juan.curso.springboot.app.sistema.cursos.dto.PageStudentResponse;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Student;
+import com.juan.curso.springboot.app.sistema.cursos.entities.User;
 import com.juan.curso.springboot.app.sistema.cursos.services.StudentService;
 
 import jakarta.validation.Valid;
@@ -67,7 +69,7 @@ public class StudentController {
 			return validation(result);
 		}
 		
-		try {
+		try {			
 			Student studentSave = studentService.save(student);
 			return ResponseEntity.status(HttpStatus.CREATED).body(studentSave);
 		} catch (Exception e) {
