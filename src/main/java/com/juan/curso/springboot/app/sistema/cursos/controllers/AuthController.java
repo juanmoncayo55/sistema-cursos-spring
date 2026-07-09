@@ -35,7 +35,7 @@ public class AuthController {
 		}	
 	}
 	
-	@PostMapping("/login")
+	/*@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginDTO login){
 		
 		try {
@@ -49,7 +49,7 @@ public class AuthController {
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno: " + e.getMessage());
 		}
-	}
+	}*/
 }
 
 

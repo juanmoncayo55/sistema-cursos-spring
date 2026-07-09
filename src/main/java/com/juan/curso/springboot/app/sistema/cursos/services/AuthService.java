@@ -8,5 +8,5 @@ import com.juan.curso.springboot.app.sistema.cursos.entities.User;
 
 public interface AuthService {
 	Optional<Student> registerStudent(RegisterStudentDTO student);
-	Optional<User> login(String email, String password);
+	Optional<User> existsByEmail(String email);
 }

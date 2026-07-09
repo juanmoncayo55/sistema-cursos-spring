@@ -65,6 +65,8 @@ public class HandlerExceptionController {
 		error.setError("La URL no es válida");
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		
+		ex.printStackTrace();
+		
 		return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(error);
 	}
 	

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 	@Override
 	@Transactional
@@ -42,7 +46,7 @@ public class AuthServiceImpl implements AuthService{
 		Student studentDB = studentRepository.save(student);
 		
 		newUser.setEmail(studentRegister.getEmail());
-		newUser.setPassword(studentRegister.getPassword());
+		newUser.setPassword( encoder.encode(studentRegister.getPassword()) );
 		newUser.setRole("STUDENT");
 		newUser.setStudent(studentDB);
 		
@@ -51,7 +55,7 @@ public class AuthServiceImpl implements AuthService{
 		return Optional.of(studentDB);
 	}
 
-	@Override
+	/*@Override
 	@Transactional(readOnly = true)
 	public Optional<User> login(String email, String password) {
 		
@@ -65,6 +69,11 @@ public class AuthServiceImpl implements AuthService{
 		}
 		
 		return Optional.empty();
+	}*/
+	
+	@Override
+	public Optional<User> existsByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
 }
