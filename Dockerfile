@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17-slim-bullseye  # ← CAMBIADO A ESTA IMAGEN
+FROM openjdk:17-slim-bullseye
 
 WORKDIR /app
 
