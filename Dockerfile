@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-jdk-slim
+FROM openjdk:17-slim-bullseye  # ← CAMBIADO A ESTA IMAGEN
 
 WORKDIR /app
 
