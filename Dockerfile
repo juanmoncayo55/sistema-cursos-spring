@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17-slim-bullseye
+FROM docker.io/eclipse-temurin:17-jdk-slim
 
 WORKDIR /app
 
