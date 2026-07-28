@@ -3,6 +3,7 @@ package com.juan.curso.springboot.app.sistema.cursos.security;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,9 @@ public class SpringSecurityConfig {
 
 	@Autowired
 	private AuthenticationConfiguration authenticationConfiguration;
+	
+	@Value("${frontend.server.deploy}")
+	private String URL_FRONT;
 	
 	@Bean
 	AuthenticationManager authenticationManager() throws Exception {
@@ -72,7 +76,7 @@ public class SpringSecurityConfig {
 		config.setAllowCredentials(true);
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("http://localhost:4200", config);
+		source.registerCorsConfiguration(URL_FRONT, config);
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
