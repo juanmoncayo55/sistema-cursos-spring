@@ -37,6 +37,8 @@ public class CourseController {
 	@Autowired
 	private CoursesService courseService;
 	
+	
+	
 	@GetMapping
 	public ResponseEntity<PageStudentResponse> getAll(
 		@RequestParam(defaultValue = "0") int page,
@@ -48,6 +50,13 @@ public class CourseController {
 		PageStudentResponse pageCourse = new PageStudentResponse(coursesPage);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(pageCourse);
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<?> getAllCourses(){
+		List<Courses> findAll = courseService.getAllCourses();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(findAll);
 	}
 	
 	@GetMapping("/{id}")
@@ -66,10 +75,13 @@ public class CourseController {
 			return validate(result);
 		}
 		try {
+			course.setId(null);
 			Courses courseDB = courseService.save(course);
+			
 			return ResponseEntity.status(HttpStatus.CREATED).body(courseDB);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 		
@@ -86,6 +98,7 @@ public class CourseController {
 		if(result.hasFieldErrors()) {
 			return validate(result);
 		}
+		
 		Optional<Courses> courseUpdate = courseService.update(id, course);
 		
 		if(!courseUpdate.isPresent()) {
@@ -117,6 +130,13 @@ public class CourseController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(courseOptional.get());
+	}
+	
+	@GetMapping("/search/{name}")
+	public ResponseEntity<?> searchCourse(@PathVariable String name){
+		List<Courses> courses = courseService.searchByFullname(name);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(courses);
 	}
 	
 	private ResponseEntity<?> validate(BindingResult result) {

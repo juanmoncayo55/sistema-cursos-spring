@@ -1,5 +1,6 @@
 package com.juan.curso.springboot.app.sistema.cursos.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -9,9 +10,11 @@ import com.juan.curso.springboot.app.sistema.cursos.entities.Teacher;
 
 public interface TeacherService {
 	Page<Teacher> findAll(Pageable pageable);
+	List<Teacher> getAll();
 	Optional<Teacher> findById(Long id);
 	Teacher save(Teacher teacher);
 	Optional<Teacher> update(Long id, Teacher teacher);
 	Optional<Teacher> delete(Long id);
 	Optional<Teacher> assignCourse(Long idTeacher, Long idCourse);
+	List<Teacher> searchByFullname(String fullname);
 }

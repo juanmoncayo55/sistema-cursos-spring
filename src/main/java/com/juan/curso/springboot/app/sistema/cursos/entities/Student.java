@@ -128,6 +128,10 @@ public class Student {
 	public void setComments(Set<Comments> comments) {
 		this.comments = comments;
 	}
+	
+	public int getTotalCourses() {
+		return this.courses.size();
+	}
 
 	public void addCourse(Courses course) {
 		this.courses.add(course);

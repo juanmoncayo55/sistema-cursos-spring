@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,7 +45,7 @@ public class Classes {
 	private String status;
 	
 	@ManyToOne
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@JoinColumn(name = "course_id")
 	private Courses course;
 	
@@ -117,9 +118,10 @@ public class Classes {
 		comment.setClasse(this);
 	}
 	
-	public Long getIdCourse() {
-		return this.course.getId();
+	public Long getCourseId() {
+	    return this.course != null ? this.course.getId() : null;
 	}
+	
 
 	@Override
 	public int hashCode() {
@@ -141,6 +143,6 @@ public class Classes {
 	@Override
 	public String toString() {
 		return "Classes {id=" + id + ", name=" + name + ", mode=" + mode + ", maxCapacity=" + maxCapacity + ", status="
-				+ status + "}";
+				+ status + " course=" + course + "}";
 	}
 }

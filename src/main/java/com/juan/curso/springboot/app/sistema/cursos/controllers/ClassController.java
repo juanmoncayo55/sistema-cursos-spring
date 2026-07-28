@@ -59,13 +59,17 @@ public class ClassController {
 	
 	@PostMapping
 	public ResponseEntity<?> save(@Valid @RequestBody Classes classe, BindingResult result){
+		System.out.println("Desde el mcontrolador");
+		System.out.println(classe.toString());
 		if(result.hasFieldErrors()) {
 			return validate(result);
 		}
 		try {
+			
 			Classes newClass = classService.save(classe);
 			return ResponseEntity.status(HttpStatus.CREATED).body(newClass);
 		}catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 		
@@ -107,6 +111,13 @@ public class ClassController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(classOptional.get());
+	}
+	
+	@GetMapping("/search/{name}")
+	public ResponseEntity<?> searchClass(@PathVariable String name){
+		List<Classes> classSearch = classService.searchClasses(name);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(classSearch);
 	}
 	
 	private ResponseEntity<?> validate(BindingResult result) {

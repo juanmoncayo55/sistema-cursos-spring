@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -20,10 +23,51 @@ import com.juan.curso.springboot.app.sistema.cursos.exceptions.TeacherNotFoundEx
 
 @RestControllerAdvice
 public class HandlerExceptionController {
-	//IllegalArgumentException
-	//HttpMessageNotReadableException
-	//IllegalStateException
 	//HttpRequestMethodNotSupportedException
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+	    Map<String, Object> error = new HashMap<>();
+	    error.put("date", new Date());
+	    error.put("message", "No se puede eliminar el registro porque tiene datos relacionados.");
+	    error.put("error", "Violación de integridad referencial");
+	    error.put("status", HttpStatus.CONFLICT.value());
+	    
+	    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public Map<String, Object> invalidArgumentPassedParam(Exception ex){
+		Map<String, Object> error = new HashMap<>();
+		error.put("date", new Date());
+		error.put("message", ex.getMessage());
+		error.put("error", "El argumento pasado no es válido, no cumple con lo requerido.");
+		error.put("status", HttpStatus.BAD_REQUEST.value());
+		return error;
+	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public Map<String, Object> invalidHttpMessage(Exception ex){
+		Map<String, Object> error = new HashMap<>();
+		error.put("date", new Date());
+		error.put("message", ex.getMessage());
+		error.put("error", "El Objeto JSON enviado esta mal formado.");
+		error.put("status", HttpStatus.BAD_REQUEST.value());
+		return error;
+	}
+	
+	@ExceptionHandler(IllegalStateException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public Map<String, Object> handleIllegalState(IllegalStateException ex) {
+	    Map<String, Object> error = new HashMap<>();
+	    error.put("date", new Date());
+	    error.put("message", "La operación no se puede realizar debido al estado actual del sistema.");
+	    error.put("error", ex.getMessage());
+	    error.put("status", HttpStatus.CONFLICT.value());
+	    
+	    return error;
+	}
+	
 	@ExceptionHandler(NullPointerException.class)
 	public Map<String, Object> nullPointerExceptionError(Exception ex){
 		Map<String, Object> error = new HashMap<>();

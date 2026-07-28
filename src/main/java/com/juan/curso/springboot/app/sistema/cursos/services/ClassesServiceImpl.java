@@ -10,19 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.juan.curso.springboot.app.sistema.cursos.entities.Classes;
+import com.juan.curso.springboot.app.sistema.cursos.entities.Courses;
 import com.juan.curso.springboot.app.sistema.cursos.repositories.ClassesRepository;
+import com.juan.curso.springboot.app.sistema.cursos.repositories.CoursesRepository;
 
 @Service
 public class ClassesServiceImpl implements ClassesService{
 	
 	@Autowired
 	private ClassesRepository repository;
+	
+	@Autowired
+	private CoursesRepository courseRepository;
 
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Classes> findAll(Pageable pageable) {
 		return (Page<Classes>) repository.findAll(pageable);
 	}
+	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -33,6 +39,12 @@ public class ClassesServiceImpl implements ClassesService{
 	@Override
 	@Transactional
 	public Classes save(Classes classe) {
+		System.out.println("DEsde el service");
+		System.out.println(classe.toString());
+		
+		Courses course = courseRepository.getById(classe.getCourse().getId());
+		classe.setId(null);
+		classe.setCourse(course);
 		return repository.save(classe);
 	}
 	
@@ -69,5 +81,11 @@ public class ClassesServiceImpl implements ClassesService{
 			repository.delete(classe);
 		});
 		return classOptional;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Classes> searchClasses(String name) {
+		return repository.searchByName(name);
 	}
 }

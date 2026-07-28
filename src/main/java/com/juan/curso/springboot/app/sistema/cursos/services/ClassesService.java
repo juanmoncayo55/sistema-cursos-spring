@@ -15,4 +15,5 @@ public interface ClassesService {
 	List<Classes> saveAll(List<Classes> classes);
 	Optional<Classes> update(Long id, Classes classe);
 	Optional<Classes> delete(Long id);
+	List<Classes> searchClasses(String name);
 }

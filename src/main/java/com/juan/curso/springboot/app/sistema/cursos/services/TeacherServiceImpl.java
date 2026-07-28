@@ -28,6 +28,12 @@ public class TeacherServiceImpl implements TeacherService{
 	public Page<Teacher> findAll(Pageable pageable) {
 		return (Page<Teacher>) repository.findAll(pageable);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Teacher> getAll() {
+		return repository.getAll();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -49,6 +55,7 @@ public class TeacherServiceImpl implements TeacherService{
 			Teacher teacherDB = teacherOptional.get();
 			teacherDB.setName(teacher.getName());
 			teacherDB.setLastname(teacher.getLastname());
+			teacherDB.setEmail(teacher.getEmail());
 			return Optional.of(repository.save(teacherDB));
 		}
 		return teacherOptional;
@@ -82,6 +89,13 @@ public class TeacherServiceImpl implements TeacherService{
 		teacherDB.addCourse(courseExist.get());
 		repositoryCourse.save(courseExist.get());
 		return Optional.of( teacherDB );
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Teacher> searchByFullname(String fullname) {
+		// TODO Auto-generated method stub
+		return repository.searchByFullname(fullname);
 	}
 }
 

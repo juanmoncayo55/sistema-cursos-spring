@@ -28,6 +28,9 @@ public class Teacher {
 	@NotBlank(message = "{NotBlank.teacher.lastname}")
 	private String lastname;
 	
+	@NotBlank(message = "{NotBlank.teacher.email}")
+	private String email;
+
 	@OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JsonIgnore
 	private Set<Courses> courses;
@@ -58,6 +61,14 @@ public class Teacher {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<Courses> getCourses() {

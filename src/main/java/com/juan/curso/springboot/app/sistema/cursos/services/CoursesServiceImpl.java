@@ -11,8 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.juan.curso.springboot.app.sistema.cursos.entities.Classes;
 import com.juan.curso.springboot.app.sistema.cursos.entities.Courses;
+import com.juan.curso.springboot.app.sistema.cursos.entities.Teacher;
+import com.juan.curso.springboot.app.sistema.cursos.exceptions.TeacherNotFoundExceptions;
 import com.juan.curso.springboot.app.sistema.cursos.repositories.ClassesRepository;
 import com.juan.curso.springboot.app.sistema.cursos.repositories.CoursesRepository;
+import com.juan.curso.springboot.app.sistema.cursos.repositories.TeacherRepository;
 
 @Service
 public class CoursesServiceImpl implements CoursesService{
@@ -22,11 +25,20 @@ public class CoursesServiceImpl implements CoursesService{
 	
 	@Autowired
 	private ClassesRepository repositoryClass;
+	
+	@Autowired
+	private TeacherRepository teacherRepository;
 
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Courses> findAll(Pageable pageable) {
 		return (Page<Courses>) repository.findAll(pageable);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Courses> getAllCourses() {
+		return repository.getAll();
 	}
 
 	@Override
@@ -38,6 +50,7 @@ public class CoursesServiceImpl implements CoursesService{
 	@Override
 	@Transactional
 	public Courses save(Courses course) {
+		
 		return repository.save(course);
 	}
 
@@ -46,11 +59,16 @@ public class CoursesServiceImpl implements CoursesService{
 	public Optional<Courses> update(Long id, Courses course) {
 		Optional<Courses> courseOptional = repository.findById(id);
 		
+
 		if(courseOptional.isPresent()) {
+			
+			Teacher teacher = teacherRepository.findById(course.getTeacher().getId()).orElseThrow(() -> new TeacherNotFoundExceptions("El Profesor con No existe"));
+			
 			Courses courseDB = courseOptional.orElseThrow();
 			courseDB.setName( course.getName() );
 			courseDB.setCategory( course.getCategory() );
 			courseDB.setTimeHour( course.getTimeHour() );
+			courseDB.setTeacher(teacher);
 			
 			repository.save(courseDB);
 			
@@ -97,5 +115,13 @@ public class CoursesServiceImpl implements CoursesService{
 	public List<Courses> saveAll(List<Courses> courses) {
 		return (List<Courses>) repository.saveAll(courses);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Courses> searchByFullname(String fullname) {
+		return repository.searchByFullname(fullname);
+	}
+
+	
 
 }

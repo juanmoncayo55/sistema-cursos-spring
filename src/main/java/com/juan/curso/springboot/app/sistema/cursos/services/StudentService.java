@@ -16,4 +16,5 @@ public interface StudentService {
 	Optional<Student> update(Long id, Student student);
 	Optional<Student> delete(Long id);
 	Optional<Student> assignCourse(Long idCourse, Long idStudent);
+	List<Student> searchByFullname(String fullname);
 }

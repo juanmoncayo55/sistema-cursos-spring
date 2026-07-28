@@ -26,7 +26,7 @@ public class AuditInterceptor implements HandlerInterceptor{
 		Object handler,
 		@Nullable Exception ex
 	) throws Exception {
-		if( "DELETE".equals(request.getMethod()) || "GET".equals(request.getMethod()) ) {
+		if( "DELETE".equals(request.getMethod()) ) {
 			Audit audit = new Audit();
 			
 			

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.juan.curso.springboot.app.sistema.cursos.dto.PageStudentResponse;
@@ -65,15 +66,19 @@ public class StudentController {
 	
 	@PostMapping
 	public ResponseEntity<?> saveStudent(@Valid @RequestBody Student student, BindingResult result){
+		System.out.println(student);
 		if(result.hasFieldErrors()) {
 			return validation(result);
 		}
 		
-		try {			
+		try {
+			student.setId(null);
 			Student studentSave = studentService.save(student);
 			return ResponseEntity.status(HttpStatus.CREATED).body(studentSave);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.getMessage();
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -94,6 +99,8 @@ public class StudentController {
 		if(result.hasFieldErrors()) {
 			return validation(result);
 		}
+		
+		System.out.println(id + " Si paso");
 		
 		Optional<Student> studentOptional = studentService.update(id, student);
 		
@@ -137,6 +144,14 @@ public class StudentController {
 		});
 		
 		return ResponseEntity.badRequest().body(errors);
+	}
+	
+	@GetMapping("/search/{fullname}")
+	private ResponseEntity<?> searchByNameAndLastname(
+			@PathVariable String fullname
+	){
+		List<Student> student = studentService.searchByFullname(fullname);
+		return ResponseEntity.ok(student);
 	}
 }
 

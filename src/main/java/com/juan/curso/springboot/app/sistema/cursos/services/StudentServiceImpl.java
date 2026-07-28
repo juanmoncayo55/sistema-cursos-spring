@@ -107,4 +107,11 @@ public class StudentServiceImpl implements StudentService{
 		
 	}
 
+	@Override
+	public List<Student> searchByFullname(String fullname) {
+		return repository.searchByFullname(fullname);
+	}
+	
+
+
 }

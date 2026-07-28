@@ -1,6 +1,7 @@
 package com.juan.curso.springboot.app.sistema.cursos.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,6 +47,13 @@ public class TeacherController {
 		return ResponseEntity.ok(pageResponse);
 	}
 	
+	@GetMapping("/all")
+	public ResponseEntity<?> getAllTeachers(){
+		List<Teacher> teachers = teacherService.getAll();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(teachers);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id){
 		Optional<Teacher> teacherOptional = teacherService.findById(id);
@@ -63,9 +71,11 @@ public class TeacherController {
 			return validate(result);
 		}
 		try {
+			teacher.setId(null);
 			Teacher newTeacher = teacherService.save(teacher);
 			return ResponseEntity.status(HttpStatus.CREATED).body(newTeacher);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -109,6 +119,16 @@ public class TeacherController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(teacherOptional.get());
 	}
+	
+	@GetMapping("/search/{fullname}")
+	public ResponseEntity<?> searchTeacher(@PathVariable String fullname){
+		
+		List<Teacher> teachers = teacherService.searchByFullname(fullname);
+		
+		return ResponseEntity.status(200).body(teachers);
+		
+	}
+	
 	private ResponseEntity<?> validate(BindingResult result) {
 		Map<String, String> errors = new HashMap<>();
 		

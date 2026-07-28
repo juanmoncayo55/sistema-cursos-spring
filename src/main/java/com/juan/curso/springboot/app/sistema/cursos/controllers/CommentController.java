@@ -1,6 +1,7 @@
 package com.juan.curso.springboot.app.sistema.cursos.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -92,6 +93,25 @@ public class CommentController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(commentOptional.get());
 	}
+	
+	@GetMapping("/{idClass}/student/{idStudent}")
+	public ResponseEntity<?> getCommentsForIds(@PathVariable Long idClass, @PathVariable Long idStudent){
+		List<Comments> allComments = commentsService.commentsForIdClassIdStudent(idClass, idStudent);
+		return ResponseEntity.status(HttpStatus.OK).body(allComments);
+	}
+	
+	@GetMapping("/class/{idClass}")
+	public ResponseEntity<?> getCommentsForIdClass(@PathVariable Long idClass){
+		List<Comments> allComentsForClass = commentsService.commentsForIdClass(idClass);
+		return ResponseEntity.status(HttpStatus.OK).body(allComentsForClass);
+	}
+	
+	@GetMapping("/student/{idStudent}")
+	public ResponseEntity<?> getCommentsForIdStudent(@PathVariable Long idStudent){
+		List<Comments> allCommentsForStudent = commentsService.commentsForIdStudent(idStudent);
+		return ResponseEntity.status(HttpStatus.OK).body(allCommentsForStudent);
+	}
+	
 	
 	private ResponseEntity<?> validate(BindingResult result) {
 		Map<String, String> errors = new HashMap<>();
